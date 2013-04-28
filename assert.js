@@ -21,13 +21,15 @@ equal.file = files
  *
  * @param {String} apath
  * @param {String} bpath
+ * @param {Object} opts
  * @return {Promise} Boolean
  */
 
-function equal(ap, bp){
+function equal(ap, bp, opts){
+	opts || (opts = {})
 	return both(stat(ap), stat(bp)).spread(function(a, b){
-		if (a.isDirectory() && b.isDirectory) return dirs(ap, bp)
-		if (a.isFile() && b.isFile()) return files(ap, bp)
+		if (a.isDirectory() && b.isDirectory) return dirs(ap, bp, opts)
+		if (a.isFile() && b.isFile()) return files(ap, bp, opts)
 	})
 }
 
@@ -36,11 +38,16 @@ function equal(ap, bp){
  * 
  * @param {String} a
  * @param {String} b
+ * @param {Object} opts
  * @return {Promise} nil
  */
 
-function dirs(a, b){
+function dirs(a, b, opts){
 	return both(kids(a), kids(b)).spread(function(akids, bkids){
+		if (opts.name) {
+			akids = akids.filter(opts.name)
+			bkids = bkids.filter(opts.name)
+		}
 		var diff = compareArrays(akids, bkids)
 		if (diff) throw error('directory', a, b, diff)
 		return each(akids, function(entry){
@@ -56,7 +63,7 @@ function dirs(a, b){
 
 function error(type, a, b, diff){
 	var cwd = process.cwd()
-	var head = type + ' ' + relative(cwd, a) + ' not equal to ' + relative(cwd, b)
+	var head = type + ' ' + relative(cwd, a) + ' != ' + relative(cwd, b)
 	return new AssertionError({
 		message: head  + '\n' + (diff ? diff + '\n' : '')
 	})

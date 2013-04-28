@@ -75,4 +75,16 @@ describe('assert.js', function () {
       }).node(done)
     })
   })
+
+  describe('options', function () {
+    describe('.name', function () {
+      it('should filter files', function (done) {
+        assert(a, c, {
+          name: function(name){ 
+            return !(/test|\.gitignore|index\.js/).test(name)
+          }
+        }).node(done)
+      })
+    })
+  })
 })

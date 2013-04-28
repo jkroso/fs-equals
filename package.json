@@ -1,6 +1,6 @@
 {
   "name": "fs-equals",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "test pieces of the file system for equality",
   "keywords": ["equals", "equals", "fs", "test", "dir", "file"],
   "author": "Jake Rosoman<jkroso@gmail.com>",
