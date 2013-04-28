@@ -12,10 +12,13 @@ _With npm_
 then in your app:
 
 ```js
-var fs-equals = require('fs-equals')
+var equals = require('fs-equals')
+var assert = require('fs-equals/assert')
 ```
 
 ## API
+
+Each function is available as either an assertion or boolean predicate test. If your using this module in a test suite you probably want the assertion version since it will provide more useful information about failures
 
   - [equals()](#equals)
   - [dirs()](#dirs)
