@@ -1,6 +1,6 @@
 {
   "name": "fs-equals",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "test pieces of the file system for equality",
   "keywords": ["equals", "equals", "fs", "test", "dir", "file"],
   "author": "Jake Rosoman<jkroso@gmail.com>",
@@ -13,6 +13,7 @@
     "laissez-faire": "~0.12.1",
     "when-all": "~0.2.2",
     "every": "https://github.com/jkroso/every/archive/0.1.0.tar.gz",
+    "foreach": "https://github.com/jkroso/forEach/archive/0.5.0.tar.gz",
     "promisify": "https://github.com/jkroso/promisify/archive/0.2.0.tar.gz"
   },
   "devDependencies": {

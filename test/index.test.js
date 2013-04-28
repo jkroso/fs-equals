@@ -1,5 +1,6 @@
 
 var equals = require('..')
+  , assert = require('../assert')
   , dir = equals.dir
   , file = equals.file
   , should = require('chai').should()
@@ -44,5 +45,34 @@ describe('index.js', function () {
         answer.should.be.true
       })
     }).node(done)
+  })
+})
+
+describe('assert.js', function () {
+  it('should return undefined if equal', function (done) {
+    assert(a, b).then(function(answer){
+      should.not.exist(answer)
+      return assert(a+'/index.js', b+'/index.js').then(function(answer){
+        should.not.exist(answer)
+      })
+    }).node(done)
+  })
+
+  describe('should error if not equal', function () {
+    it('dirs', function (done) {
+      assert(a, c).then(function(answer){
+        should.not.exist(answer)
+      }).otherwise(function(e){ 
+        e.stack.should.include('test/fixture-a')
+      }).node(done)
+    })
+
+    it('files', function (done) {
+      assert(a+'/index.js', c+'/index.js').then(function(answer){
+        should.not.exist(answer)
+      }).otherwise(function(e){
+        e.stack.should.include('test/fixture-a/index.js')
+      }).node(done)
+    })
   })
 })
