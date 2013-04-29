@@ -9,12 +9,18 @@ var fs = require('fs')
   , kids = promisify(fs.readdir)
   , stat = promisify(fs.stat)
   , read = promisify(fs.readFile)
+  , exists = fs.existsSync
   , AssertionError = require('assert').AssertionError
 
+exports = module.exports = function(a, b, opts){
+	if (!exists(a)) throw new Error(a+' does not exist')
+	if (!exists(b)) throw new Error(b+' does not exist')
+	return equal(a, b, opts || {})
+}
+
 // exports
-module.exports = equal
-equal.dir = dirs
-equal.file = files
+exports.dir = dirs
+exports.file = files
 
 /**
  * compare whatever happens to be at either path
@@ -26,10 +32,10 @@ equal.file = files
  */
 
 function equal(ap, bp, opts){
-	opts || (opts = {})
 	return both(stat(ap), stat(bp)).spread(function(a, b){
 		if (a.isDirectory() && b.isDirectory) return dirs(ap, bp, opts)
 		if (a.isFile() && b.isFile()) return files(ap, bp, opts)
+		throw new Error('fs-equals/assert.js doesn\'t know what to do with this type: '+ap)
 	})
 }
 
@@ -51,7 +57,7 @@ function dirs(a, b, opts){
 		var diff = compareArrays(akids, bkids)
 		if (diff) throw error('directory', a, b, diff)
 		return each(akids, function(entry){
-			return equal(join(a, entry), join(b, entry))
+			return equal(join(a, entry), join(b, entry), opts)
 		})
 	})
 }
