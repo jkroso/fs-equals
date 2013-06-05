@@ -1,14 +1,13 @@
 
-var fs = require('fs')
-  , path = require('path')
+var path = require('path')
   , join = path.join
   , relative = path.relative
   , both = require('when-all/naked')
-  , each = require('foreach/async/promise')
-  , promisify = require('promisify')
-  , kids = promisify(fs.readdir)
-  , stat = promisify(fs.stat)
-  , read = promisify(fs.readFile)
+  , each = require('foreach/async')
+  , fs = require('promisify/fs')
+  , kids = fs.readdir
+  , stat = fs.stat
+  , read = fs.readFile
   , exists = fs.existsSync
   , AssertionError = require('assert').AssertionError
 

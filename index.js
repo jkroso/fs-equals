@@ -1,14 +1,13 @@
 
-var fs = require('fs')
-  , join = require('path').join
-  , both = require('when-all/naked')
-  , every = require('every/async/promise')
-  , promisify = require('promisify')
-  , kids = promisify(fs.readdir)
-  , stat = promisify(fs.stat)
-  , read = fs.createReadStream
+var Promise = require('laissez-faire/full')
   , streamEq = require('stream-equal')
-  , Promise = require('laissez-faire/full')
+  , both = require('when-all/naked')
+  , every = require('every/async')
+  , fs = require('promisify/fs')
+  , join = require('path').join
+  , kids = fs.readdir
+  , stat = fs.stat
+  , read = fs.createReadStream
 
 // exports
 module.exports = equal
