@@ -26,7 +26,7 @@ Each function is available as either an assertion or boolean predicate test. If 
 
 ### equals(apath:String, bpath:String)
 
-  compare whatever happens to be at either path. The result is returned via a promise
+  compare whatever happens to be at either path. The result is returned as a [Result](//github.com/jkroso/result)
 
 ### dirs(apath:String, bpath:String)
 
@@ -46,9 +46,3 @@ Each function is available as either an assertion or boolean predicate test. If 
 $ npm install
 $ make test
 ```
-
-_Note: these commands don't work on windows._ 
-
-## License 
-
-[MIT](License)
