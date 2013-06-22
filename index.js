@@ -2,14 +2,13 @@
 var decorate = require('when/decorate')
   , resultify = require('resultify')
   , streamEq = resultify(require('stream-equal'))
-  , both = require('when-all').args
   , every = require('every/async')
   , apply = require('when/apply')
-  , fs = require('resultify/fs')
   , join = require('path').join
+  , fs = require('resultify/fs')
+  , read = fs.createReadStream
   , kids = fs.readdir
   , stat = fs.stat
-  , read = fs.createReadStream
 
 module.exports = equal
 equal.dir = dirs
@@ -24,8 +23,8 @@ equal.file = files
  */
 
 function equal(ap, bp){
-	return apply(both(stat(ap), stat(bp)), function(a, b){
-		if (a.isDirectory() && b.isDirectory) return dirs(ap, bp)
+	return apply(stat(ap), stat(bp), function(a, b){
+		if (a.isDirectory() && b.isDirectory()) return dirs(ap, bp)
 		if (a.isFile() && b.isFile()) return files(ap, bp)
 		return false
 	})
