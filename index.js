@@ -1,15 +1,16 @@
 
-var Promise = require('laissez-faire/full')
-  , streamEq = require('stream-equal')
-  , both = require('when-all/naked')
+var decorate = require('when/decorate')
+  , resultify = require('resultify')
+  , streamEq = resultify(require('stream-equal'))
+  , both = require('when-all').args
   , every = require('every/async')
-  , fs = require('promisify/fs')
+  , apply = require('when/apply')
+  , fs = require('resultify/fs')
   , join = require('path').join
   , kids = fs.readdir
   , stat = fs.stat
   , read = fs.createReadStream
 
-// exports
 module.exports = equal
 equal.dir = dirs
 equal.file = files
@@ -23,7 +24,7 @@ equal.file = files
  */
 
 function equal(ap, bp){
-	return both(stat(ap), stat(bp)).spread(function(a, b){
+	return apply(both(stat(ap), stat(bp)), function(a, b){
 		if (a.isDirectory() && b.isDirectory) return dirs(ap, bp)
 		if (a.isFile() && b.isFile()) return files(ap, bp)
 		return false
@@ -39,10 +40,10 @@ function equal(ap, bp){
  */
 
 function dirs(a, b){
-	return both(kids(a), kids(b)).spread(function(akids, bkids){
-		if (!arrayEq(akids, bkids)) return false
-		return every(akids, function(entry){
-			return equal(join(a, entry), join(b, entry))
+	var akids = kids(a)
+	return arrayEqual(akids, kids(b)).then(function(sameKids){
+		return sameKids && every(akids, function(kid){
+			return equal(join(a, kid), join(b, kid))
 		})
 	})
 }
@@ -52,16 +53,11 @@ function dirs(a, b){
  * 
  * @param {String} a
  * @param {String} b
- * @return {Promise} Boolean
+ * @return {Result} Boolean
  */
 
 function files(a, b){
-	var p = new Promise
-	streamEq(read(a), read(b), function(e, answer){
-		if (e) p.reject(e)
-		else p.fulfill(answer)
-	})
-	return p
+	return streamEq(read(a), read(b))
 }
 
 /**
@@ -69,15 +65,15 @@ function files(a, b){
  *
  * @param {Array} a
  * @param {Array} b
- * @return {Boolean}
+ * @return {Result} boolean
  * @api private
  */
 
-function arrayEq(a, b){
+var arrayEqual = decorate(function(a, b){
 	var i = a.length
 	if (i !== b.length) return false
 	for (var i = 0, len = a.length; i < len; i++) {
 		if (a[i] !== b[i]) return false
 	}
 	return true
-}
+})

@@ -1,15 +1,16 @@
 
-var path = require('path')
-  , join = path.join
-  , relative = path.relative
-  , both = require('when-all/naked')
+var AssertionError = require('assert').AssertionError
+  , both = require('when-all').args
   , each = require('foreach/async')
-  , fs = require('promisify/fs')
+  , apply = require('when/apply')
+  , fs = require('resultify/fs')
+  , exists = fs.existsSync
+  , read = fs.readFile
   , kids = fs.readdir
   , stat = fs.stat
-  , read = fs.readFile
-  , exists = fs.existsSync
-  , AssertionError = require('assert').AssertionError
+  , path = require('path')
+  , join = path.join
+  , relative = path.relative
 
 exports = module.exports = function(a, b, opts){
 	if (!exists(a)) throw new Error(a+' does not exist')
@@ -31,8 +32,8 @@ exports.file = files
  */
 
 function equal(ap, bp, opts){
-	return both(stat(ap), stat(bp)).spread(function(a, b){
-		if (a.isDirectory() && b.isDirectory) return dirs(ap, bp, opts)
+	return apply(both(stat(ap), stat(bp)), function(a, b){
+		if (a.isDirectory() && b.isDirectory()) return dirs(ap, bp, opts)
 		if (a.isFile() && b.isFile()) return files(ap, bp, opts)
 		throw new Error('fs-equals/assert.js doesn\'t know what to do with this type: '+ap)
 	})
@@ -48,7 +49,7 @@ function equal(ap, bp, opts){
  */
 
 function dirs(a, b, opts){
-	return both(kids(a), kids(b)).spread(function(akids, bkids){
+	return apply(both(kids(a), kids(b)), function(akids, bkids){
 		if (opts.name) {
 			akids = akids.filter(opts.name)
 			bkids = bkids.filter(opts.name)
@@ -95,12 +96,11 @@ function compareArrays(a, b){
  * 
  * @param {String} a
  * @param {String} b
- * @return {Promise} nil
+ * @return {Result} nil
  */
 
 function files(a, b){
-	return both(read(a, 'utf8'), read(b, 'utf8'))
-		.spread(function(aText, bText){
-			if (aText !== bText) throw error('file', a, b)
-		})
+	return apply(both(read(a, 'utf8'), read(b, 'utf8')), function(aText, bText){
+		if (aText !== bText) throw error('file', a, b)
+	})
 }
