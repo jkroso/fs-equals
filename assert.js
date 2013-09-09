@@ -1,23 +1,22 @@
 
 var AssertionError = require('assert').AssertionError
-  , each = require('foreach/async')
-  , apply = require('when/apply')
-  , fs = require('resultify/fs')
-  , exists = fs.existsSync
-  , read = fs.readFile
-  , kids = fs.readdir
-  , stat = fs.stat
-  , path = require('path')
-  , relative = path.relative
-  , join = path.join
+var apply = require('lift-result/apply')
+var each = require('foreach/async')
+var fs = require('lift-result/fs')
+var exists = fs.existsSync
+var read = fs.readFile
+var kids = fs.readdir
+var stat = fs.stat
+var path = require('path')
+var relative = path.relative
+var join = path.join
 
-exports = module.exports = function(a, b, opts){
+module.exports = exports = function(a, b, opts){
 	if (!exists(a)) throw new Error(a+' does not exist')
 	if (!exists(b)) throw new Error(b+' does not exist')
 	return equal(a, b, opts || {})
 }
 
-// exports
 exports.dir = dirs
 exports.file = files
 

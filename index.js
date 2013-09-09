@@ -1,18 +1,17 @@
 
-var decorate = require('when/decorate')
-  , resultify = require('resultify')
-  , streamEq = resultify(require('stream-equal'))
-  , every = require('every/async')
-  , apply = require('when/apply')
-  , join = require('path').join
-  , fs = require('resultify/fs')
-  , read = fs.createReadStream
-  , kids = fs.readdir
-  , stat = fs.stat
+var streamEq = require('lift-result/cps')(require('stream-equal'))
+var apply = require('lift-result/apply')
+var every = require('every/async')
+var fs = require('lift-result/fs')
+var lift = require('lift-result')
+var join = require('path').join
+var read = fs.createReadStream
+var kids = fs.readdir
+var stat = fs.stat
 
-module.exports = equal
-equal.dir = dirs
-equal.file = files
+module.exports = exports = equal
+exports.dir = dirs
+exports.file = files
 
 /**
  * compare whatever happens to be at either path
@@ -32,7 +31,7 @@ function equal(ap, bp){
 
 /**
  * test the contents of two directories for equality
- * 
+ *
  * @param {String} a
  * @param {String} b
  * @return {Promise} Boolean
@@ -49,7 +48,7 @@ function dirs(a, b){
 
 /**
  * test the contents of two files for equality
- * 
+ *
  * @param {String} a
  * @param {String} b
  * @return {Result} Boolean
@@ -68,7 +67,7 @@ function files(a, b){
  * @api private
  */
 
-var arrayEqual = decorate(function(a, b){
+var arrayEqual = lift(function(a, b){
 	var i = a.length
 	if (i !== b.length) return false
 	for (var i = 0, len = a.length; i < len; i++) {

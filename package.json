@@ -1,6 +1,6 @@
 {
   "name": "fs-equals",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "test pieces of the file system for equality",
   "keywords": ["equals", "equals", "fs", "test", "dir", "file"],
   "author": "Jake Rosoman<jkroso@gmail.com>",
@@ -9,18 +9,19 @@
     "url": "git://github.com/jkroso/fs-equals.git"
   },
   "dependencies": {
-    "result": "0.3.1",
-    "resultify": "0.2.4",
+    "foreach": "http://github.com/jkroso/forEach/tarball/0.8.7",
+    "every": "http://github.com/jkroso/every/tarball/0.2.4",
     "stream-equal": "0.1.5",
-    "foreach": "http://github.com/jkroso/forEach/tarball/0.8.5",
-    "every": "http://github.com/jkroso/every/tarball/0.2.3",
-    "when": "http://github.com/jkroso/when/tarball/3.2.4"
+    "lift-result": "0.1.1",
+    "result-type": "1.0.0",
+    "result": "0.4.2"
   },
   "devDependencies": {
-    "mocha": "1.12.0",
+    "mocha": "1.12.1",
     "chai": "1.7.2"
   },
-  "scripts": {
-    "install": "npm dedupe"
-  }
+  "files": [
+    "assert.js",
+    "index.js"
+  ]
 }
